@@ -19,11 +19,9 @@ class AuthController {
 
       const maxContacts = plan === "premium" ? 3 : 1;
       if (emergencyContacts.length > maxContacts) {
-        return res
-          .status(400)
-          .json({
-            error: `Maximum ${maxContacts} emergency contact(s) allowed for ${plan} plan`,
-          });
+        return res.status(400).json({
+          error: `Maximum ${maxContacts} emergency contact(s) allowed for ${plan} plan`,
+        });
       }
 
       const salt = await bcrypt.genSalt(10);
