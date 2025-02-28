@@ -7,17 +7,40 @@ require("dotenv").config();
 class AuthController {
   static async register(req, res) {
     try {
-      const { name, email, password, emergencyContact, location } = req.body;
+      const { name, email, password, emergencyContacts, location, plan } =
+        req.body;
+
+      // Validate emergency contacts based on plan
+      if (!Array.isArray(emergencyContacts) || emergencyContacts.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "At least one emergency contact is required" });
+      }
+
+      const maxContacts = plan === "premium" ? 3 : 1;
+      if (emergencyContacts.length > maxContacts) {
+        return res
+          .status(400)
+          .json({
+            error: `Maximum ${maxContacts} emergency contact(s) allowed for ${plan} plan`,
+          });
+      }
+
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const encryptedPhone = Encryption.encryptData(emergencyContact);
+      // Encrypt each emergency contact
+      const encryptedContacts = emergencyContacts.map((contact) =>
+        Encryption.encryptData(contact)
+      );
+
       const user = new User({
         name,
         email,
         password: hashedPassword,
-        emergencyContact: encryptedPhone,
+        emergencyContacts: encryptedContacts,
         location,
+        plan: plan || "free", // Default to free plan if not specified
       });
 
       await user.save();
