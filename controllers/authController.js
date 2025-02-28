@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const Encryption = require("../utils/encryption");
 require("dotenv").config();
 
@@ -19,9 +19,11 @@ class AuthController {
 
       const maxContacts = plan === "premium" ? 3 : 1;
       if (emergencyContacts.length > maxContacts) {
-        return res.status(400).json({
-          error: `Maximum ${maxContacts} emergency contact(s) allowed for ${plan} plan`,
-        });
+        return res
+          .status(400)
+          .json({
+            error: `Maximum ${maxContacts} emergency contact(s) allowed for ${plan} plan`,
+          });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -38,7 +40,7 @@ class AuthController {
         password: hashedPassword,
         emergencyContacts: encryptedContacts,
         location,
-        plan: plan || "free", // Default to free plan if not specified
+        plan: plan || "free",
       });
 
       await user.save();
@@ -65,6 +67,33 @@ class AuthController {
         expiresIn: "1h",
       });
       res.status(200).json({ token });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async getAllUsers(req, res) {
+    try {
+      // Fetch all users from the database
+      const users = await User.find();
+
+      // Decrypt emergency contacts for each user
+      const decryptedUsers = users.map((user) => {
+        const decryptedContacts = user.emergencyContacts.map((contact) => {
+          const { encrypted, key, iv } = contact;
+          return Encryption.decryptData(encrypted, key, iv);
+        });
+        return {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          emergencyContacts: decryptedContacts, // Return decrypted phone numbers
+          location: user.location,
+          plan: user.plan,
+        };
+      });
+
+      res.status(200).json({ users: decryptedUsers });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
