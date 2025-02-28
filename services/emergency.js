@@ -14,17 +14,12 @@ class EmergencyService {
     let message = "",
       locationDetails = "";
 
+    // Placeholder logic for testing without Google Maps API
     if (eventType === "fall") {
-      locationDetails = await LocationService.getLocationDetails(
-        senior.location.lat,
-        senior.location.lng
-      );
+      locationDetails = `Placeholder Address for Lat: ${senior.location.lat}, Lng: ${senior.location.lng}`;
       message = `Emergency: Fall detected at ${locationDetails}. Senior's location: https://maps.google.com/?q=${senior.location.lat},${senior.location.lng}`;
     } else if (eventType === "scream") {
-      locationDetails = await LocationService.getLocationDetails(
-        senior.location.lat,
-        senior.location.lng
-      );
+      locationDetails = `Placeholder Address for Lat: ${senior.location.lat}, Lng: ${senior.location.lng}`;
       message = `Emergency: Distress scream detected at ${locationDetails}. Senior's location: https://maps.google.com/?q=${senior.location.lat},${senior.location.lng}`;
     }
 
