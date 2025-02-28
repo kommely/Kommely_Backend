@@ -12,7 +12,6 @@
   "description": "Backend for Kommely hackathon project with MongoDB Atlas",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
