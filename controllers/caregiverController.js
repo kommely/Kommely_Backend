@@ -21,12 +21,24 @@ class CaregiverController {
         interests,
         certifications,
         bio,
+        location,
       } = req.body;
 
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
       const encryptedPhoneNumber = Encryption.encryptData(phoneNumber);
+
+      // Validate location
+      if (
+        !location ||
+        typeof location.lat !== "number" ||
+        typeof location.lng !== "number"
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Location with lat and lng is required" });
+      }
 
       const caregiver = new Caregiver({
         name,
@@ -41,6 +53,7 @@ class CaregiverController {
         interests: interests || [],
         certifications: certifications || [],
         bio: bio || "",
+        location, // Add location
       });
 
       await caregiver.save();
