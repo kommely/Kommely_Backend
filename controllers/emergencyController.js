@@ -3,7 +3,7 @@ const EmergencyService = require("../services/emergency");
 class EmergencyController {
   static async detectEmergency(req, res) {
     try {
-      const { seniorId, eventType } = req.body; // Mock data from AI team
+      const { seniorId, eventType } = req.body;
       const result = await EmergencyService.handleEmergency(
         seniorId,
         eventType

@@ -13,6 +13,7 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "bcrypt": "^5.1.1",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",

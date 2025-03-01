@@ -22,7 +22,7 @@ class TwilioService {
   }
 
   static async sendLowBatteryAlert(phoneNumber) {
-    const message = "Warning: Senior's device battery is low (20%)";
+    const message = "Warning: Senior’s device battery is low (20%)";
     await this.sendEmergencyAlert(phoneNumber, message);
   }
 }
